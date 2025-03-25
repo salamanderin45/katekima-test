@@ -31,19 +31,19 @@ const menu = reactive<ChildType[]>([
     boolChildren: false,
     child: [
       {
-        name: 'list table',
-        bool: false,
-        boolChildren: false,
-        icons: Book,
-        url: '/',
-        child: [],
-      },
-      {
-        name: 'detail',
+        name: 'soal 1',
         bool: false,
         boolChildren: false,
         icons: Book,
         url: '/detail',
+        child: [],
+      },
+      {
+        name: 'soal 2',
+        bool: false,
+        boolChildren: false,
+        icons: Book,
+        url: '/',
         child: [],
       },
     ],

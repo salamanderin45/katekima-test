@@ -106,7 +106,11 @@ onMounted(() => {
         <tr v-for="(d, i) in dataList" :key="i + '-table'">
           <td>{{ offset + i + 1 }}</td>
           <td>{{ d?.name }}</td>
-          <td>1961</td>
+          <td class="w-1">
+            <RouterLink :to="`/detail/${d?.name}`">
+              <button class="bg-blue-400 text-white p-2 rounded-md">detail</button>
+            </RouterLink>
+          </td>
         </tr>
       </tbody>
     </table>
