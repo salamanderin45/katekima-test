@@ -18,7 +18,7 @@ function isShow() {
 }
 </script>
 <template>
-  <div class="flex justify-between py-4 px-10 shadow w-full">
+  <div class="flex justify-between py-4 px-10 shadow w-full sticky top-0 bg-white">
     <button @click="isShow"><AlignJustify /></button>
   </div>
 </template>

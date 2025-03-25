@@ -15,40 +15,40 @@ type ChildType = {
   child: ChildType[]
 }
 const menu = reactive<ChildType[]>([
-  {
+  /* {
     name: 'Dashboard',
     icons: ClipboardCheck,
     child: [],
     url: '/admin/dashboard',
     bool: false,
     boolChildren: false,
-  },
+  }, */
   {
-    name: 'cv',
+    name: 'table',
     icons: Book,
     url: '',
     bool: false,
     boolChildren: false,
     child: [
       {
-        name: 'portfolio',
+        name: 'list table',
         bool: false,
         boolChildren: false,
         icons: Book,
-        url: '/admin/portfolio',
+        url: '/',
         child: [],
       },
       {
-        name: 'upload',
+        name: 'detail',
         bool: false,
         boolChildren: false,
         icons: Book,
-        url: '/admin/upload',
+        url: '/detail',
         child: [],
       },
     ],
   },
-  {
+  /* {
     name: 'aws',
     icons: Book,
     url: '',
@@ -72,7 +72,7 @@ const menu = reactive<ChildType[]>([
         child: [],
       },
     ],
-  },
+  }, */
 ])
 
 function menuIsShow(i: number, i2: number, data: ChildType) {
@@ -166,11 +166,11 @@ onMounted(() => {
 <template>
   <div class="shadow w-full h-dvh bg-gray-100 overflow-hidden">
     <div class="font-bold text-2xl capitalize text-center w-full px-10 py-4">admin</div>
-    <div class="px-4 w-full flex flex-col">
+    <div class="px-4 w-full flex flex-col gap-2">
       <template v-for="(d, i) in menu" :key="d.url">
-        <NuxtLink v-if="d.child.length === 0" :to="d?.url ?? '#'">
+        <RouterLink v-if="d.child.length === 0" :to="d?.url ?? '#'">
           <div
-            :class="`flex gap-4 p-3 items-center cursor-pointer rounded-lg ${
+            :class="`flex gap-4 p-3 items-center border border-gray-300 cursor-pointer rounded-lg ${
               d.bool ? '!bg-teal-500 text-white' : 'text-gray-500 '
             }`"
             @click="menuIsShow(i, -1, d)"
@@ -180,12 +180,12 @@ onMounted(() => {
               {{ d.name }}
             </div>
           </div>
-        </NuxtLink>
+        </RouterLink>
 
         <template v-else>
           <div
             @click="menuIsShow(i, -1, d)"
-            :class="`grid grid-cols-[auto_1fr_auto] p-3 gap-4 items-center cursor-pointer ${
+            :class="`grid grid-cols-[auto_1fr_auto] p-3 gap-4 border rounded-md border-gray-300 items-center cursor-pointer ${
               d.bool ? '!text-teal-500' : 'text-gray-600 '
             }`"
           >
@@ -198,9 +198,9 @@ onMounted(() => {
           <div
             :id="`menu-child-${i}`"
             :size="15"
-            class="overflow-hidden h-[0px] gap-2 flex flex-col"
+            class="overflow-hidden h-[0px] gap-2 flex flex-col pl-4"
           >
-            <NuxtLink v-for="(d2, i2) in d?.child" :to="d2.url" :key="d2.url">
+            <RouterLink v-for="(d2, i2) in d?.child" :to="d2.url" :key="d2.url">
               <div
                 @click="menuIsShow(i, i2, d)"
                 :class="`flex gap-x-4 py-1 items-center rounded-lg cursor-pointer ml-[16px] ${
@@ -212,7 +212,7 @@ onMounted(() => {
                   {{ d2.name }}
                 </div>
               </div>
-            </NuxtLink>
+            </RouterLink>
           </div>
         </template>
       </template>
