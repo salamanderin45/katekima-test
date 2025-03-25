@@ -7,7 +7,12 @@ const itemsPerPageOptions = [10, 30, 50]
 const itemsPerPage = ref(10)
 const TOTAL_COUNT = computed(() => data?.value?.data?.count)
 const offset = ref(0)
-
+const query = ref('')
+const dataList = computed(() => {
+  return query.value !== ''
+    ? data.value?.data?.results?.filter((d: any) => d?.name === query.value)
+    : data.value?.data?.results
+})
 const totalPages = computed(() => Math.ceil(TOTAL_COUNT.value / itemsPerPage.value))
 const currentPage = computed(() => Math.floor(offset.value / itemsPerPage.value) + 1)
 
@@ -66,7 +71,6 @@ const generatePagination = () => {
   }
   return pages
 }
-
 const goToPage = (page) => {
   if (typeof page === 'number') {
     offset.value = (page - 1) * itemsPerPage.value
@@ -82,6 +86,7 @@ onMounted(() => {
   <main class="p-4 px-10">
     <div class="text-2xl font-bold mb-10 capitalize">table</div>
     <div class="mb-4 text-center flex justify-end">
+      <input v-model="query" placeholder="Search..." class="border p-2 rounded w-full" />
       <label class="mr-2 text-gray-700">Items per page:</label>
       <select @change="updateItemsPerPage" v-model="itemsPerPage" class="border p-1 rounded">
         <option v-for="option in itemsPerPageOptions" :key="option" :value="option">
@@ -98,7 +103,7 @@ onMounted(() => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(d, i) in data?.data?.results" :key="i + '-table'">
+        <tr v-for="(d, i) in dataList" :key="i + '-table'">
           <td>{{ offset + i + 1 }}</td>
           <td>{{ d?.name }}</td>
           <td>1961</td>

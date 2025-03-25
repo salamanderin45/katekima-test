@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/vue-query'
+import { useMutation } from '@tanstack/vue-query'
 import axios from 'axios'
 
 type paramsType = {
@@ -7,20 +7,15 @@ type paramsType = {
 }
 
 export const useTable = () => {
-  const useGetTable = (params: paramsType) => {
-    return useQuery({
-      queryKey: ['table'],
-      queryFn: () => axios.get('https://pokeapi.co/api/v2/berry', { params: params }),
-    })
-  }
   const mutateGetTable = () => {
     return useMutation({
       mutationFn: (params: paramsType) =>
-        axios.get('https://pokeapi.co/api/v2/berry', { params: params }),
+        axios.get(`https://pokeapi.co/api/v2/berry`, {
+          params: params,
+        }),
     })
   }
   return {
-    useGetTable,
     mutateGetTable,
   }
 }
