@@ -35,7 +35,7 @@ const menu = reactive<ChildType[]>([
         bool: false,
         boolChildren: false,
         icons: Book,
-        url: '/detail',
+        url: '/soal',
         child: [],
       },
       {

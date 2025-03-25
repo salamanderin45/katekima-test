@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTable } from '@/api/profile'
+import { useTable } from '@/api/bokeapi'
 import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
