@@ -4,3 +4,7 @@
 #app {
   font-weight: normal;
 }
+
+button {
+  @apply cursor-pointer;
+}

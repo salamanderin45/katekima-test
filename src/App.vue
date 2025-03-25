@@ -1,10 +1,18 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterView } from 'vue-router'
+import NavbarHome from './components/NavbarHome.vue'
+import SidebarHome from './components/SidebarHome.vue'
 </script>
 
 <template>
   <header></header>
-
-  <RouterView />
+  <div class="flex">
+    <div id="showSidebar" class="w-[300px]">
+      <SidebarHome />
+    </div>
+    <div class="w-full">
+      <NavbarHome />
+      <RouterView />
+    </div>
+  </div>
 </template>
