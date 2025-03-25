@@ -1,40 +1,52 @@
 <script setup lang="ts">
-import { useTable } from '@/api/bokeapi'
 import { computed, onMounted, ref } from 'vue'
+import axios from 'axios'
+import { useProduct } from '@/api/product'
 
-const { data, mutate } = useTable().mutateGetTable()
 const itemsPerPageOptions = [10, 30, 50]
 const itemsPerPage = ref(10)
-const TOTAL_COUNT = computed(() => data?.value?.data?.count)
 const offset = ref(0)
 const query = ref('')
+const products = ref([])
+const data = useProduct().mutateGetTable()
+// Fetch data dari FakeStoreAPI
+const fetchProducts = async () => {
+  try {
+    const response = await data.mutateAsync()
+    products.value = response.data
+  } catch (error) {
+    console.error('Error fetching products:', error)
+  }
+}
+
+const TOTAL_COUNT = computed(() => products.value.length)
+
 const dataList = computed(() => {
-  return query.value !== ''
-    ? data.value?.data?.results?.filter((d: any) => d?.name === query.value)
-    : data.value?.data?.results
+  const filtered = query.value
+    ? products.value.filter((d: any) => d.title.toLowerCase().includes(query.value.toLowerCase()))
+    : products.value
+
+  return filtered.slice(offset.value, offset.value + itemsPerPage.value)
 })
+
 const totalPages = computed(() => Math.ceil(TOTAL_COUNT.value / itemsPerPage.value))
 const currentPage = computed(() => Math.floor(offset.value / itemsPerPage.value) + 1)
 
 const nextPage = () => {
   if (offset.value + itemsPerPage.value < TOTAL_COUNT.value) {
     offset.value += itemsPerPage.value
-    mutate({ limit: itemsPerPage.value, offset: offset.value })
   }
 }
 
 const prevPage = () => {
   if (offset.value > 0) {
     offset.value -= itemsPerPage.value
-    mutate({ limit: itemsPerPage.value, offset: offset.value })
   }
 }
 
 const updateItemsPerPage = (event: any) => {
-  console.log('🚀 ~ updateItemsPerPage ~ event:', event.target.value)
   itemsPerPage.value = parseInt(event.target.value, 10)
-  offset.value = 0 // Reset ke halaman pertama saat mengubah jumlah item per halaman
-  mutate({ limit: itemsPerPage.value, offset: offset.value })
+  offset.value = 0 // Reset ke halaman pertama
 }
 
 const generatePagination = () => {
@@ -71,20 +83,19 @@ const generatePagination = () => {
   }
   return pages
 }
+
 const goToPage = (page) => {
   if (typeof page === 'number') {
     offset.value = (page - 1) * itemsPerPage.value
-    mutate({ limit: itemsPerPage.value, offset: offset.value })
   }
 }
-onMounted(() => {
-  mutate({ limit: 10 })
-})
+
+onMounted(fetchProducts)
 </script>
 
 <template>
   <main class="p-4 px-10">
-    <div class="text-2xl font-bold mb-10 capitalize">table</div>
+    <div class="text-2xl font-bold mb-10 capitalize">Table</div>
     <div class="mb-4 text-center flex justify-end">
       <input v-model="query" placeholder="Search..." class="border p-2 rounded w-full" />
       <label class="mr-2 text-gray-700">Items per page:</label>
@@ -97,18 +108,18 @@ onMounted(() => {
     <table class="table-auto w-full">
       <thead>
         <tr class="capitalize">
-          <th class="w-1">no</th>
-          <th>name</th>
-          <th>aksi</th>
+          <th class="w-1">No</th>
+          <th>Name</th>
+          <th>Aksi</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(d, i) in dataList" :key="i + '-table'">
           <td>{{ offset + i + 1 }}</td>
-          <td>{{ d?.name }}</td>
+          <td>{{ d?.title }}</td>
           <td class="w-1">
-            <RouterLink :to="`/detail/${d?.name}`">
-              <button class="bg-blue-400 text-white p-2 rounded-md">detail</button>
+            <RouterLink :to="`/detail/${d?.id}`">
+              <button class="bg-blue-400 text-white p-2 rounded-md">Detail</button>
             </RouterLink>
           </td>
         </tr>
@@ -149,6 +160,7 @@ onMounted(() => {
     </div>
   </main>
 </template>
+
 <style lang="css" scoped>
 td,
 tr,
